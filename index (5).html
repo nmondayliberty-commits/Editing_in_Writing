@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creative Writing — Mid-Term Test</title>
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#64748b;
+    --indigo:#4338ca;
+    --sky:#0ea5e9;
+    --rose:#e11d48;
+    --green:#059669;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    padding:34px 16px 90px;
+    min-height:100vh;
+    font-family:"Segoe UI",Roboto,-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+    color:var(--ink);
+    background-color:#0b1020;
+    background-image:
+      radial-gradient(900px 620px at 6% -12%, rgba(99,102,241,.62), transparent 62%),
+      radial-gradient(880px 600px at 104% 4%, rgba(14,165,233,.48), transparent 60%),
+      radial-gradient(900px 720px at 50% 118%, rgba(217,70,239,.42), transparent 62%),
+      linear-gradient(160deg,#070c1a 0%,#121a38 45%,#0a0f22 100%);
+    background-attachment:fixed;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:radial-gradient(rgba(255,255,255,.09) 1px, transparent 1px);
+    background-size:26px 26px;
+    -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,.75), transparent 72%);
+    mask-image:linear-gradient(to bottom, rgba(0,0,0,.75), transparent 72%);
+  }
+
+  .wrap{
+    position:relative; z-index:1;
+    max-width:1000px; margin:0 auto;
+    display:flex; flex-direction:column; gap:20px;
+  }
+
+  .card{
+    background:#ffffff;
+    border-radius:20px;
+    padding:28px 30px;
+    box-shadow:0 22px 55px rgba(2,6,23,.45);
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative; overflow:hidden; background:linear-gradient(135deg,#ffffff 0%,#f7f8ff 55%,#eef4ff 100%);}
+  .hero::after{
+    content:""; position:absolute; left:0; right:0; top:0; height:6px;
+    background:linear-gradient(90deg,#4338ca,#0ea5e9,#d946ef);
+  }
+  .tag{
+    display:inline-block; padding:6px 13px; border-radius:999px;
+    background:#eef2ff; color:var(--indigo);
+    font-size:.72rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+  }
+  .hero h1{
+    margin:.45em 0 .18em;
+    font-size:clamp(1.75rem,4.2vw,2.55rem);
+    letter-spacing:-.6px; line-height:1.1;
+  }
+  .lead{color:#475569; font-size:1.02rem; margin:0; max-width:64ch; line-height:1.6;}
+
+  .meta-row{display:flex; gap:16px; flex-wrap:wrap; margin-top:22px;}
+  .meta-row label{
+    flex:1 1 240px; display:flex; flex-direction:column; gap:7px;
+    font-size:.72rem; font-weight:800; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .meta-row input{
+    padding:12px 14px; border-radius:12px; border:1.5px solid #e2e8f0;
+    background:#f8fafc; font-size:1rem; font-family:inherit; color:var(--ink);
+    transition:border-color .18s, box-shadow .18s, background .18s;
+  }
+  .meta-row input:focus{
+    outline:none; border-color:#6366f1; background:#fff;
+    box-shadow:0 0 0 4px rgba(99,102,241,.15);
+  }
+
+  /* ---------- Section heads ---------- */
+  .sec-head{
+    display:flex; justify-content:space-between; align-items:center;
+    gap:12px; flex-wrap:wrap; margin-bottom:8px;
+  }
+  h2{
+    margin:0; font-size:1.14rem; display:flex; align-items:center; gap:11px;
+    letter-spacing:-.2px;
+  }
+  .num{
+    display:inline-grid; place-items:center; width:30px; height:30px;
+    border-radius:9px; color:#fff; font-size:.9rem; font-weight:800;
+    background:linear-gradient(135deg,#4338ca,#0ea5e9);
+    box-shadow:0 6px 14px rgba(67,56,202,.35);
+  }
+  .pill{
+    background:#eef2ff; color:var(--indigo); font-weight:800;
+    font-size:.74rem; letter-spacing:.05em; padding:6px 13px; border-radius:999px;
+    white-space:nowrap;
+  }
+  .hint{color:var(--muted); font-size:.9rem; margin:6px 0 16px; line-height:1.55;}
+
+  /* ---------- Passage ---------- */
+  .passage{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:1.12rem; line-height:2.15; color:#1e293b;
+    background:#fbfcff; border:1.5px dashed #dbe3f5;
+    border-radius:14px; padding:22px 24px;
+  }
+  .tok{
+    cursor:pointer; padding:1px 2px; border-radius:5px;
+    transition:background .15s, color .15s;
+  }
+  .tok:hover{background:#e0e7ff;}
+  .tok.marked{
+    color:#be123c; background:#ffe4e6;
+    text-decoration:underline;
+    text-decoration-color:var(--rose);
+    text-decoration-thickness:3px;
+    text-underline-offset:4px;
+  }
+
+  .toolbar{
+    display:flex; justify-content:space-between; align-items:center;
+    gap:12px; flex-wrap:wrap; margin-top:16px;
+    font-size:.9rem; color:#475569;
+  }
+  .counter b{color:var(--indigo); font-size:1.05rem;}
+
+  .btn{
+    font-family:inherit; font-weight:700; border:none; cursor:pointer;
+    border-radius:12px; transition:transform .12s, box-shadow .2s, background .2s, color .2s;
+  }
+  .btn.primary{
+    background:linear-gradient(135deg,#4338ca,#0ea5e9);
+    color:#fff; padding:16px 52px; font-size:1.05rem; letter-spacing:.03em;
+    box-shadow:0 16px 34px rgba(67,56,202,.42);
+  }
+  .btn.primary:hover{transform:translateY(-2px); box-shadow:0 20px 40px rgba(67,56,202,.55);}
+  .btn.primary:active{transform:translateY(0);}
+  .btn.ghost{
+    background:#f1f5f9; color:#334155; padding:9px 16px; font-size:.84rem;
+  }
+  .btn.ghost:hover{background:#e2e8f0;}
+
+  .actions{display:flex; justify-content:center; padding:4px 0;}
+
+  textarea{
+    width:100%; min-height:210px; border-radius:14px;
+    border:1.5px solid #e2e8f0; background:#fbfcff;
+    padding:16px 18px; font-family:Georgia,"Times New Roman",serif;
+    font-size:1.05rem; line-height:1.9; color:var(--ink); resize:vertical;
+    transition:border-color .18s, box-shadow .18s, background .18s;
+  }
+  textarea:focus{
+    outline:none; border-color:#6366f1; background:#fff;
+    box-shadow:0 0 0 4px rgba(99,102,241,.15);
+  }
+
+  /* ---------- Results ---------- */
+  .results{display:none;}
+  .results.show{display:block; animation:rise .5s cubic-bezier(.2,.8,.3,1);}
+  @keyframes rise{from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:none;}}
+
+  .stats{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(138px,1fr));
+    gap:14px; margin:20px 0 8px;
+  }
+  .stat{
+    background:#f8fafc; border:1px solid #e8eef7;
+    border-radius:14px; padding:16px 12px; text-align:center;
+  }
+  .stat .k{
+    font-size:.68rem; font-weight:800; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .stat .v{
+    font-size:1.65rem; font-weight:800; margin-top:7px; color:#1e293b; line-height:1.1;
+  }
+  .stat.hi .v{color:var(--indigo);}
+  .stat.good .v{color:var(--green);}
+  .stat.bad .v{color:var(--rose);}
+
+  .remark{
+    background:#eef2ff; border-left:5px solid var(--indigo);
+    border-radius:12px; padding:14px 18px; margin:14px 0 6px;
+    font-size:.95rem; color:#312e81; line-height:1.6;
+  }
+
+  h3{
+    font-size:.95rem; margin:26px 0 4px; letter-spacing:.02em;
+    color:#334155; text-transform:uppercase; font-weight:800;
+  }
+
+  .table-wrap{
+    overflow-x:auto; border:1px solid #eef2f7;
+    border-radius:12px; margin-top:10px;
+  }
+  table{width:100%; min-width:560px; border-collapse:collapse; font-size:.9rem;}
+  th{
+    background:#f1f5f9; text-align:left; padding:11px 13px;
+    font-size:.7rem; font-weight:800; letter-spacing:.08em;
+    text-transform:uppercase; color:#475569; white-space:nowrap;
+  }
+  td{padding:11px 13px; border-top:1px solid #eef2f7; vertical-align:top; line-height:1.5;}
+  tbody tr:hover td{background:#fafbff;}
+  .mark-ok{color:var(--green); font-weight:800;}
+  .mark-no{color:var(--rose); font-weight:800;}
+  .score-cell{font-weight:800; white-space:nowrap;}
+
+  .model{
+    background:#f0fdf4; border-left:5px solid #22c55e; border-radius:12px;
+    padding:16px 20px; margin-top:10px;
+    font-family:Georgia,"Times New Roman",serif; line-height:1.95;
+    color:#14532d; font-size:1rem;
+  }
+  .answer-box{
+    background:#f8fafc; border:1px solid #e8eef7; border-radius:12px;
+    padding:16px 20px; margin-top:10px;
+    font-family:Georgia,"Times New Roman",serif; line-height:1.9;
+    color:#334155; font-size:.98rem; white-space:pre-wrap; word-wrap:break-word;
+  }
+  .note{font-size:.85rem; color:var(--muted); margin:10px 0 0; line-height:1.55;}
+
+  @media (max-width:560px){
+    .card{padding:22px 18px; border-radius:16px;}
+    .passage{font-size:1.03rem; line-height:2; padding:18px 16px;}
+    .btn.primary{width:100%; padding:16px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============ HEADER ============ -->
+  <header class="card hero">
+    <span class="tag">Creative Writing</span>
+    <h1>Mid-Term Test</h1>
+    <p class="lead">
+      Read the passage carefully. Find the errors, underline them, and rewrite the passage correctly.
+    </p>
+    <div class="meta-row">
+      <label>Name
+        <input id="studentName" type="text" placeholder="Enter your full name" autocomplete="off">
+      </label>
+      <label>Date
+        <input id="studentDate" type="date">
+      </label>
+    </div>
+  </header>
+
+  <!-- ============ PART A ============ -->
+  <section class="card">
+    <div class="sec-head">
+      <h2><span class="num">A</span> Underline the Errors</h2>
+      <span class="pill">6 marks</span>
+    </div>
+    <p class="hint">
+      Click a word or group of words to underline it. Click it again to remove the underline.
+      There are <strong>six</strong> errors in the passage.
+    </p>
+
+    <div id="passage" class="passage" aria-label="Test passage"></div>
+
+    <div class="toolbar">
+      <span class="counter"><b id="markCount">0</b> mark(s) placed</span>
+      <button id="clearBtn" class="btn ghost" type="button">Clear all marks</button>
+    </div>
+  </section>
+
+  <!-- ============ PART B ============ -->
+  <section class="card">
+    <div class="sec-head">
+      <h2><span class="num">B</span> Rewrite the Passage Correctly</h2>
+      <span class="pill">6 marks</span>
+    </div>
+    <p class="hint">
+      Rewrite the whole passage in the box below, correcting every error you found.
+    </p>
+    <textarea id="rewrite" placeholder="Type the corrected passage here..."></textarea>
+  </section>
+
+  <!-- ============ SUBMIT ============ -->
+  <div class="actions">
+    <button id="submitBtn" class="btn primary" type="button">Submit Test</button>
+  </div>
+
+  <!-- ============ RESULTS ============ -->
+  <section id="results" class="card results" aria-live="polite"></section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------------------------------------------------------
+     PASSAGE + TOKENISATION
+  --------------------------------------------------------- */
+  const PASSAGE =
+    "Last Friday, our class visit the city museum with our English teacher. " +
+    "We arrive early and waited patiently for the guide. " +
+    "Inside, we saw many intresting objects, including old maps, tools, paintings and ancient coins. " +
+    "The guide explain how people lived many years ago. " +
+    "He spoke clearly and answered our questions. " +
+    "After the tour, we ate lunch outside, but nobody brought enough water. " +
+    "\u201CWhat an exciting day\u201D! Ada shouted. " +
+    "We returned to school happily, however our teacher reminded us to write a report " +
+    "about the beautiful experience before going home.";
+
+  const tokens = PASSAGE.split(/\s+/);
+
+  const passageEl = document.getElementById("passage");
+  const markCountEl = document.getElementById("markCount");
+  const resultsEl = document.getElementById("results");
+  const rewriteEl = document.getElementById("rewrite");
+  const submitBtn = document.getElementById("submitBtn");
+  const clearBtn = document.getElementById("clearBtn");
+
+  /* Build clickable tokens */
+  tokens.forEach(function (tok, i) {
+    const span = document.createElement("span");
+    span.className = "tok";
+    span.textContent = tok;
+    span.dataset.i = i;
+    span.addEventListener("click", function () {
+      span.classList.toggle("marked");
+      updateCount();
+    });
+    passageEl.appendChild(span);
+    passageEl.appendChild(document.createTextNode(" "));
+  });
+
+  function updateCount() {
+    markCountEl.textContent = document.querySelectorAll(".tok.marked").length;
+  }
+
+  clearBtn.addEventListener("click", function () {
+    document.querySelectorAll(".tok.marked").forEach(function (el) {
+      el.classList.remove("marked");
+    });
+    updateCount();
+  });
+
+  /* ---------------------------------------------------------
+     MARKING SCHEME
+  --------------------------------------------------------- */
+  const ERROR_GROUPS = [
+    { keys: ["visit"],            skill: "Verb tense",              expected: "visit \u2192 visited" },
+    { keys: ["arrive"],           skill: "Verb tense",              expected: "arrive \u2192 arrived" },
+    { keys: ["intresting"],       skill: "Spelling",                expected: "intresting \u2192 interesting" },
+    { keys: ["explain"],          skill: "Verb tense",              expected: "explain \u2192 explained" },
+    { keys: ["day\u201D!"],       skill: "Punctuation",             expected: "day\u201D! \u2192 day!\u201D" },
+    { keys: ["happily,", "however"], skill: "Punctuation (comma splice)", expected: "happily, however \u2192 happily; however," }
+  ];
+
+  const PART_B_CHECKS = [
+    {
+      skill: "Verb tense", expected: "visited",
+      test: function (t) { return /\bvisited\b/i.test(t) && !/\bvisit\b/i.test(t); }
+    },
+    {
+      skill: "Verb tense", expected: "arrived",
+      test: function (t) { return /\barrived\b/i.test(t) && !/\barrive\b/i.test(t); }
+    },
+    {
+      skill: "Spelling", expected: "interesting",
+      test: function (t) { return /interesting/i.test(t) && !/intresting/i.test(t); }
+    },
+    {
+      skill: "Verb tense", expected: "explained",
+      test: function (t) { return /\bexplained\b/i.test(t) && !/\bexplain\b/i.test(t); }
+    },
+    {
+      skill: "Punctuation", expected: "\u201CWhat an exciting day!\u201D",
+      test: function (t) {
+        return /day!\s*["\u201D]/.test(t) && !/day\s*["\u201D]\s*!/.test(t);
+      }
+    },
+    {
+      skill: "Punctuation (comma splice)", expected: "happily; however, our teacher",
+      test: function (t) {
+        return /(;\s*however\s*,|\.\s*However\s*,|\.\s*however\s*,)/i.test(t);
+      }
+    }
+  ];
+
+  const MODEL_ANSWER =
+    "Last Friday, our class visited the city museum with our English teacher. " +
+    "We arrived early and waited patiently for the guide. " +
+    "Inside, we saw many interesting objects, including old maps, tools, paintings and ancient coins. " +
+    "The guide explained how people lived many years ago. " +
+    "He spoke clearly and answered our questions. " +
+    "After the tour, we ate lunch outside, but nobody brought enough water. " +
+    "\u201CWhat an exciting day!\u201D Ada shouted. " +
+    "We returned to school happily; however, our teacher reminded us to write a report " +
+    "about the beautiful experience before going home.";
+
+  const GRADE_SCALE = [
+    { min: 90, g: "A", r: "Excellent work! You have a sharp eye for errors." },
+    { min: 75, g: "B", r: "Very good. A little more care and your work will be perfect." },
+    { min: 65, g: "C", r: "Good effort. Revise verb tenses and punctuation rules." },
+    { min: 50, g: "D", r: "Fair. Practise past-tense forms and punctuation." },
+    { min: 40, g: "E", r: "Weak. Re-read the passage and study the model answer carefully." },
+    { min: 0,  g: "F", r: "Needs improvement. Study the model answer and try again." }
+  ];
+
+  /* ---------------------------------------------------------
+     EVALUATION
+  --------------------------------------------------------- */
+  function evaluate() {
+    /* ---- Part A : which tokens were underlined ---- */
+    const markedTokens = new Set();
+    document.querySelectorAll(".tok.marked").forEach(function (el) {
+      markedTokens.add(tokens[Number(el.dataset.i)]);
+    });
+
+    let scoreA = 0;
+    const rowsA = ERROR_GROUPS.map(function (grp, i) {
+      const hit = grp.keys.find(function (k) { return markedTokens.has(k); });
+      const ok = Boolean(hit);
+      if (ok) scoreA++;
+      return {
+        n: "A" + (i + 1),
+        skill: grp.skill,
+        expected: grp.expected,
+        response: hit || "\u2014",
+        ok: ok
+      };
+    });
+
+    const validKeys = new Set();
+    ERROR_GROUPS.forEach(function (g) { g.keys.forEach(function (k) { validKeys.add(k); }); });
+    const extras = Array.from(markedTokens).filter(function (t) { return !validKeys.has(t); });
+
+    /* ---- Part B : corrections present in the rewrite ---- */
+    const text = rewriteEl.value.trim();
+    let scoreB = 0;
+    const rowsB = PART_B_CHECKS.map(function (chk, i) {
+      const ok = text.length > 0 && chk.test(text);
+      if (ok) scoreB++;
+      return { n: "B" + (i + 1), skill: chk.skill, expected: chk.expected, ok: ok };
+    });
+
+    const total = scoreA + scoreB;
+    const maxTotal = ERROR_GROUPS.length + PART_B_CHECKS.length; // 12
+    const pct = Math.round((total / maxTotal) * 100);
+
+    let grade = GRADE_SCALE[GRADE_SCALE.length - 1];
+    for (let i = 0; i < GRADE_SCALE.length; i++) {
+      if (pct >= GRADE_SCALE[i].min) { grade = GRADE_SCALE[i]; break; }
+    }
+
+    renderSheet({
+      scoreA: scoreA, scoreB: scoreB,
+      maxA: ERROR_GROUPS.length, maxB: PART_B_CHECKS.length,
+      total: total, maxTotal: maxTotal, pct: pct,
+      grade: grade, rowsA: rowsA, rowsB: rowsB,
+      extras: extras, studentText: text
+    });
+  }
+
+  /* ---------------------------------------------------------
+     RENDER SCORE SHEET
+  --------------------------------------------------------- */
+  function renderSheet(d) {
+    const name = document.getElementById("studentName").value.trim();
+    const date = document.getElementById("studentDate").value;
+
+    const headerBits = [];
+    if (name) headerBits.push("Candidate: <strong>" + escapeHtml(name) + "</strong>");
+    if (date) headerBits.push("Date: <strong>" + escapeHtml(date) + "</strong>");
+
+    const rowsAHtml = d.rowsA.map(function (r) {
+      return "<tr>" +
+        "<td>" + r.n + "</td>" +
+        "<td>" + r.skill + "</td>" +
+        "<td>" + escapeHtml(r.expected) + "</td>" +
+        "<td>" + (r.ok
+            ? '<span class="mark-ok">\u2713 ' + escapeHtml(r.response) + "</span>"
+            : '<span class="mark-no">\u2717 not marked</span>') + "</td>" +
+        '<td class="score-cell">' + (r.ok ? 1 : 0) + "/1</td>" +
+        "</tr>";
+    }).join("");
+
+    const rowsBHtml = d.rowsB.map(function (r) {
+      return "<tr>" +
+        "<td>" + r.n + "</td>" +
+        "<td>" + r.skill + "</td>" +
+        "<td>" + escapeHtml(r.expected) + "</td>" +
+        "<td>" + (r.ok
+            ? '<span class="mark-ok">\u2713 corrected</span>'
+            : '<span class="mark-no">\u2717 not corrected</span>') + "</td>" +
+        '<td class="score-cell">' + (r.ok ? 1 : 0) + "/1</td>" +
+        "</tr>";
+    }).join("");
+
+    const extrasNote = d.extras.length
+      ? "<p class=\"note\"><strong>Extra marks placed on words that are not errors:</strong> " +
+        escapeHtml(d.extras.join(", ")) + " (no marks were deducted).</p>"
+      : "<p class=\"note\">No extra (incorrect) marks were placed. Well done.</p>";
+
+    const answerBlock = d.studentText
+      ? "<div class=\"answer-box\">" + escapeHtml(d.studentText) + "</div>"
+      : "<p class=\"note\">You did not type a rewritten passage.</p>";
+
+    const headLine = headerBits.length
+      ? "<p class=\"note\" style=\"margin-top:-6px\">" + headerBits.join(" &nbsp;\u2022&nbsp; ") + "</p>"
+      : "";
+
+    resultsEl.innerHTML =
+      '<div class="sec-head">' +
+        '<h2><span class="num">\u2713</span> Score Sheet</h2>' +
+        '<span class="pill">Total ' + d.maxTotal + " marks</span>" +
+      "</div>" +
+      headLine +
+
+      '<div class="stats">' +
+        '<div class="stat"><div class="k">Part A</div><div class="v">' + d.scoreA + "/" + d.maxA + "</div></div>" +
+        '<div class="stat"><div class="k">Part B</div><div class="v">' + d.scoreB + "/" + d.maxB + "</div></div>" +
+        '<div class="stat hi"><div class="k">Total</div><div class="v">' + d.total + "/" + d.maxTotal + "</div></div>" +
+        '<div class="stat"><div class="k">Percentage</div><div class="v">' + d.pct + "%</div></div>" +
+        '<div class="stat ' + (d.pct >= 50 ? "good" : "bad") + '"><div class="k">Grade</div><div class="v">' + d.grade.g + "</div></div>" +
+      "</div>" +
+
+      '<p class="remark">' + d.grade.r + "</p>" +
+
+      "<h3>Part A \u2014 Error Identification</h3>" +
+      '<div class="table-wrap"><table>' +
+        "<thead><tr><th>#</th><th>Skill tested</th><th>Expected correction</th><th>Your response</th><th>Score</th></tr></thead>" +
+        "<tbody>" + rowsAHtml + "</tbody>" +
+      "</table></div>" +
+      extrasNote +
+
+      "<h3>Part B \u2014 Corrections Applied in the Rewrite</h3>" +
+      '<div class="table-wrap"><table>' +
+        "<thead><tr><th>#</th><th>Skill tested</th><th>Correction required</th><th>Applied in your rewrite</th><th>Score</th></tr></thead>" +
+        "<tbody>" + rowsBHtml + "</tbody>" +
+      "</table></div>" +
+
+      "<h3>Your Rewritten Passage</h3>" +
+      answerBlock +
+
+      "<h3>Model Answer</h3>" +
+      '<div class="model">' + escapeHtml(MODEL_ANSWER) + "</div>";
+
+    resultsEl.classList.add("show");
+    resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  /* ---------------------------------------------------------
+     SUBMIT
+  --------------------------------------------------------- */
+  submitBtn.addEventListener("click", function () {
+    const nothingMarked = document.querySelectorAll(".tok.marked").length === 0;
+    const nothingWritten = rewriteEl.value.trim().length === 0;
+
+    if (nothingMarked && nothingWritten) {
+      const go = window.confirm(
+        "You have not underlined any errors and you have not written a corrected passage.\n\n" +
+        "Submit anyway?"
+      );
+      if (!go) return;
+    }
+
+    evaluate();
+    submitBtn.textContent = "Re-mark My Test";
+  });
+
+  updateCount();
+})();
+</script>
+</body>
+</html>
